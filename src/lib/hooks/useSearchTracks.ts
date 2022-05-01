@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import axios from 'axios';
-import { SpotifyTrackSearchResult } from 'lib/types/spotify';
+import { BFFTrackSearchResponse } from 'lib/types/bff';
 
 /**
  * 楽曲検索
@@ -12,10 +12,9 @@ const useSearchTracks = (query: string) => {
   const fetcher = (url: string, query: string) =>
     axios.post(url, { query }).then((res) => res.data);
   const config = {
-    initialData: { tracks: [] },
     shouldRetryOnError: false,
   };
-  const { data, error } = useSWR<SpotifyTrackSearchResult>(
+  const { data, error } = useSWR<BFFTrackSearchResponse>(
     searchQuery,
     fetcher,
     config,

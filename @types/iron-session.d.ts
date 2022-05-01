@@ -4,6 +4,7 @@ declare module 'iron-session' {
   interface IronSessionData {
     user: {
       accessToken: string;
+      refreshToken?: string;
     }
   }
 }

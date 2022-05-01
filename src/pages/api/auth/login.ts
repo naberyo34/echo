@@ -31,6 +31,7 @@ const handler: NextApiHandler = async (req, res) => {
     // トークンをCookieに保存
     req.session.user = {
       accessToken: response.data.access_token,
+      refreshToken: response.data.refresh_token,
     };
     await req.session.save();
 

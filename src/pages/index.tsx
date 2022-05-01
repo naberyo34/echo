@@ -1,29 +1,11 @@
 import { useState } from 'react';
-import type {
-  NextPage,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import type { NextPage, InferGetServerSidePropsType } from 'next';
 import { getAuthUrl } from 'lib/utils';
 import axios from 'axios';
+import useAuth from 'lib/hooks/useAuth';
 import useSearchTracks from 'lib/hooks/useSearchTracks';
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext,
-) => {
-  // アクセストークンが保存されている場合はトークンをpropsとして渡す
-  // TODO: 再認証のロジックが入っていないので一時間くらいで認証が死ぬ
-  if (context.req.cookies['spotify/echo']) {
-    const token = context.req.cookies['spotify/echo'];
-
-    return {
-      props: {
-        authPath: getAuthUrl(),
-        token,
-      },
-    };
-  }
-
+export const getServerSideProps = async () => {
   return {
     props: {
       authPath: getAuthUrl(),
@@ -33,25 +15,30 @@ export const getServerSideProps = async (
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Home: NextPage<Props> = ({ authPath, token }) => {
+const Home: NextPage<Props> = ({ authPath }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const { data } = useSearchTracks(searchQuery);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { data: authData, mutate: authMutate } = useAuth();
+  const { data: tracksData } = useSearchTracks(searchQuery);
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setSearchQuery(value);
+  };
+  const handleLogout = () => {
+    axios.post('/api/auth/logout');
+    authMutate();
   };
 
   return (
     <div>
       <h1>echo (alpha)</h1>
-      {token ? (
+      {authData?.accessToken ? (
         <>
           <p>logged in</p>
-          <button type="button" onClick={() => axios.post('/api/auth/logout')}>
+          <button type="button" onClick={handleLogout}>
             log out
           </button>
-          <input type="text" onChange={handleChange} />
-          {data?.tracks.map((track) => {
+          <input type="text" onChange={handleSearch} />
+          {tracksData?.tracks.map((track) => {
             return <p key={track.id}>{track.name}</p>;
           })}
         </>

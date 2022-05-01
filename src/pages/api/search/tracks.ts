@@ -1,10 +1,8 @@
 import { NextApiHandler } from 'next';
 import axios from 'axios';
 import withSession from 'lib/middlewares/withSession';
-import {
-  SpotifyTrackSearchApiResponse,
-  SpotifyTrackSearchResult,
-} from 'lib/types/spotify';
+import { SpotifyTrackSearchApiResponse } from 'lib/types/spotify';
+import { BFFTrackSearchResponse } from 'lib/types/bff';
 
 /**
  * 楽曲検索
@@ -30,7 +28,7 @@ const handler: NextApiHandler = async (req, res) => {
       url,
       config,
     );
-    const result: SpotifyTrackSearchResult = {
+    const result: BFFTrackSearchResponse = {
       tracks: trackSearchResponse.data.tracks.items,
     };
 

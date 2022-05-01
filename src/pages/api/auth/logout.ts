@@ -1,11 +1,13 @@
 import { NextApiHandler } from 'next';
 import withSession from 'lib/middlewares/withSession';
 
+/**
+ * ログアウト
+ */
 const handler: NextApiHandler = async (req, res) => {
   try {
     req.session.destroy();
-    // リダイレクト
-    res.status(200).redirect('/');
+    res.status(200).end();
   } catch (e) {
     if (e instanceof Error) res.status(500).send(e.message);
   }

@@ -1,6 +1,6 @@
-// Spotify APIが取り扱う型の定義
+// Spotify APIで取得できるデータの型定義
 
-// Spotifyの認証APIが最初に返却するレスポンス
+// Spotifyの認証APIが返却するレスポンス
 // see: https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
 type SpotifyAuthApiResponse = {
   access_token: string;
@@ -44,13 +44,4 @@ type SpotifyTrackSearchApiResponse = {
   };
 };
 
-// 上記をBFF側で加工したあとのJSON
-type SpotifyTrackSearchResult = {
-  tracks: SpotifyTrack[];
-};
-
-export type {
-  SpotifyAuthApiResponse,
-  SpotifyTrackSearchApiResponse,
-  SpotifyTrackSearchResult,
-};
+export type { SpotifyAuthApiResponse, SpotifyTrack, SpotifyTrackSearchApiResponse };
