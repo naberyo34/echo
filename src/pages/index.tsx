@@ -21,8 +21,8 @@ const Home: NextPage<Props> = ({ authPath }) => {
     const { value } = e.target;
     setQuery(value);
   };
-  const handleLogout = () => {
-    axios.post('/api/auth/logout');
+  const handleLogout = async () => {
+    await axios.post('/api/auth/logout');
     tokenMutate();
   };
 
