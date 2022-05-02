@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next';
-import withSession from 'lib/middlewares/withSession';
+import withSession from 'libs/middlewares/withSession';
 
 /**
  * ログアウト

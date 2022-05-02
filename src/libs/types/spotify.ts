@@ -44,4 +44,33 @@ type SpotifyTrackSearchApiResponse = {
   };
 };
 
-export type { SpotifyAuthApiResponse, SpotifyTrack, SpotifyTrackSearchApiResponse };
+// 楽曲分析で取得できる情報のうち、アプリに必要なもの
+// see: https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-audio-features
+type SpotifyAudioFeatures = {
+  acousticness: number;
+  danceability: number;
+  energy: number;
+  id: string;
+  instrumentalness: number;
+  key: number;
+  liveness: number;
+  loudness: number;
+  mode: 0 | 1;
+  speechiness: number;
+  tempo: number;
+  time_signature: 4;
+  track_href: string;
+  valence: number;
+};
+
+type SpotifyAudioFeaturesApiResponse = {
+  audio_features: SpotifyAudioFeatures[];
+};
+
+export type {
+  SpotifyAuthApiResponse,
+  SpotifyTrack,
+  SpotifyTrackSearchApiResponse,
+  SpotifyAudioFeatures,
+  SpotifyAudioFeaturesApiResponse,
+};

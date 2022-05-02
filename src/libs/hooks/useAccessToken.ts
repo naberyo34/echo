@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import axios from 'axios';
-import { BFFAccessTokenResponse } from 'lib/types/bff';
+import { BFFAccessTokenResponse } from 'libs/types/bff';
 
 const endpoint = '/api/auth/refreshtoken';
 const fetcher = (url: string) => axios.post(url).then((res) => res.data);

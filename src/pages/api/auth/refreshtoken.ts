@@ -1,7 +1,7 @@
 import { NextApiHandler } from 'next';
 import axios from 'axios';
-import withSession from 'lib/middlewares/withSession';
-import { SpotifyAuthApiResponse } from 'lib/types/spotify';
+import withSession from 'libs/middlewares/withSession';
+import refreshAccessToken from 'libs/utils/refreshAccessToken';
 
 /**
  * アクセストークンの状態を確認し、期限切れの場合は更新する
@@ -26,34 +26,16 @@ const handler: NextApiHandler = async (req, res) => {
     });
     res.status(200).json(accessToken);
   } catch {
+    // プロフィールに接続できなかった場合、トークンを再発行する
     if (refreshToken) {
-      // refreshTokenを使って、新しいaccessTokenを取得する
-      // see: https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
-      const endpoint = 'https://accounts.spotify.com/api/token';
-      const contentType = 'application/x-www-form-urlencoded';
-      const authorization = `Basic ${Buffer.from(
-        `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`,
-        'utf-8',
-      ).toString('base64')}`;
-      const params = new URLSearchParams();
-      params.append('grant_type', 'refresh_token');
-      params.append('refresh_token', refreshToken);
-      const response = await axios.post<SpotifyAuthApiResponse>(
-        endpoint,
-        params,
-        {
-          headers: {
-            'Content-type': contentType,
-            Authorization: authorization,
-          },
-        },
-      );
+      const response = await refreshAccessToken(refreshToken);
       req.session.user = {
         accessToken: response.data.access_token,
       };
       await req.session.save();
       res.status(200).json(response.data.access_token);
     } else {
+      // リフレッシュトークンがない場合はエラーを返す(これが出たら何かしらおかしい)
       res.status(401).send('unauthorized');
     }
   }

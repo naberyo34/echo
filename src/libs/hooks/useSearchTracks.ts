@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useSWR from 'swr';
 import axios from 'axios';
-import { BFFSearchTracksResponse } from 'lib/types/bff';
+import { BFFSearchTracksResponse } from 'libs/types/bff';
 
 const endpoint = '/api/search/tracks';
 const fetcher = (url: string, query: string) =>

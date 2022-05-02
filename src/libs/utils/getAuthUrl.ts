@@ -20,4 +20,4 @@ const getAuthUrl = () => {
   return `${endpoint}?${params.toString()}`;
 };
 
-export { getAuthUrl };
+export default getAuthUrl;

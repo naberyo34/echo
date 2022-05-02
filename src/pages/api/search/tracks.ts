@@ -1,8 +1,9 @@
 import { NextApiHandler } from 'next';
 import axios from 'axios';
-import withSession from 'lib/middlewares/withSession';
-import { SpotifyTrackSearchApiResponse } from 'lib/types/spotify';
-import { BFFSearchTracksResponse } from 'lib/types/bff';
+import withSession from 'libs/middlewares/withSession';
+import { SpotifyTrackSearchApiResponse } from 'libs/types/spotify';
+import { BFFTrackFullData } from 'libs/types/bff';
+import getTracksAudioFeatures from 'libs/utils/getTracksAudioFeatures';
 
 /**
  * 楽曲検索
@@ -28,9 +29,30 @@ const handler: NextApiHandler = async (req, res) => {
       url,
       config,
     );
-    const result: BFFSearchTracksResponse = {
-      tracks: searchTracksResponse.data.tracks.items,
-    };
+
+    // 検索結果の楽曲に対して、楽曲分析情報も取得する
+    const searchTracksIds = searchTracksResponse.data.tracks.items.map(
+      (item) => item.id,
+    );
+    const searchTracksAudioFeatures = await getTracksAudioFeatures(
+      searchTracksIds,
+      accessToken,
+    );
+
+    // 対応する楽曲データと楽曲分析データを結合する
+    const searchTracksFullData: BFFTrackFullData[] =
+      searchTracksResponse.data.tracks.items.map((item) => {
+        const targetAudioFeatures =
+          searchTracksAudioFeatures.data.audio_features.find(
+            (data) => data.id === item.id,
+          );
+
+        console.log({ targetAudioFeatures });
+
+        return { ...item, audio_features: targetAudioFeatures };
+      });
+
+    const result = searchTracksFullData;
 
     res.status(200).json(result);
   } catch (e) {

@@ -29,4 +29,4 @@ yarn dev
 ### API 通信について
 
 Next.js の API Routes を BFF として用いる設計としています。
-クライアントサイドの API コールはすべて API Routes に向け、外部 API をコールする記述は全て API Routes 上に書いてください。データの整形なども API Routes で行います。
+クライアントサイドでの API コールはすべて API Routes に向け、外部 API のコールは全て API Routes 上で実行してください。データの整形なども API Routes で行います。

@@ -1,8 +1,8 @@
 import type { NextPage, InferGetServerSidePropsType } from 'next';
-import { getAuthUrl } from 'lib/utils';
+import getAuthUrl from 'libs/utils/getAuthUrl';
 import axios from 'axios';
-import useAccessToken from 'lib/hooks/useAccessToken';
-import useSearchTracks from 'lib/hooks/useSearchTracks';
+import useAccessToken from 'libs/hooks/useAccessToken';
+import useSearchTracks from 'libs/hooks/useSearchTracks';
 
 export const getServerSideProps = async () => {
   return {
@@ -36,8 +36,8 @@ const Home: NextPage<Props> = ({ authPath }) => {
             log out
           </button>
           <input type="text" onChange={handleSearch} />
-          {tracksData?.tracks.map((track) => {
-            return <p key={track.id}>{track.name}</p>;
+          {tracksData?.map((track) => {
+            return <p key={track.id}>{track.name} {track.audio_features?.danceability}</p>;
           })}
         </>
       ) : (
