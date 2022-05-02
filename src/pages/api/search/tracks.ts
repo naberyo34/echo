@@ -47,8 +47,6 @@ const handler: NextApiHandler = async (req, res) => {
             (data) => data.id === item.id,
           );
 
-        console.log({ targetAudioFeatures });
-
         return { ...item, audio_features: targetAudioFeatures };
       });
 

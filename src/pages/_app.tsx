@@ -5,10 +5,11 @@ import cssReset from 'modern-css-reset/dist/reset.min.css';
 
 const globalStyles = css`
   ${cssReset}
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&family=Roboto:wght@400;900&display=swap');
 
   body {
     min-height: auto;
+    color: #fff;
+    background: #202124;
   }
 
   * {
@@ -22,15 +23,28 @@ const globalStyles = css`
   }
 
   a {
+    color: inherit;
     text-decoration: none;
+  }
+
+  button,
+  input {
+    color: inherit;
+    background-color: inherit;
+    border: none;
+    appearance: none;
   }
 `;
 
+const wrapperStyles = css`
+  padding: 40px;
+`;
+
 const MyApp = ({ Component, pageProps }: AppProps) => (
-  <>
+  <section css={wrapperStyles}>
     <Global styles={globalStyles} />
     <Component {...pageProps} />
-  </>
+  </section>
 );
 
 export default MyApp;

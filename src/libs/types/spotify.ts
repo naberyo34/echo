@@ -49,10 +49,11 @@ type SpotifyTrackSearchApiResponse = {
 type SpotifyAudioFeatures = {
   acousticness: number;
   danceability: number;
+  duration_ms: number;
   energy: number;
   id: string;
   instrumentalness: number;
-  key: number;
+  key: -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
   liveness: number;
   loudness: number;
   mode: 0 | 1;
