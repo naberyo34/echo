@@ -2,7 +2,7 @@ import { NextApiHandler } from 'next';
 import axios from 'axios';
 import withSession from 'lib/middlewares/withSession';
 import { SpotifyTrackSearchApiResponse } from 'lib/types/spotify';
-import { BFFTrackSearchResponse } from 'lib/types/bff';
+import { BFFSearchTracksResponse } from 'lib/types/bff';
 
 /**
  * 楽曲検索
@@ -24,12 +24,12 @@ const handler: NextApiHandler = async (req, res) => {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    const trackSearchResponse = await axios.get<SpotifyTrackSearchApiResponse>(
+    const searchTracksResponse = await axios.get<SpotifyTrackSearchApiResponse>(
       url,
       config,
     );
-    const result: BFFTrackSearchResponse = {
-      tracks: trackSearchResponse.data.tracks.items,
+    const result: BFFSearchTracksResponse = {
+      tracks: searchTracksResponse.data.tracks.items,
     };
 
     res.status(200).json(result);

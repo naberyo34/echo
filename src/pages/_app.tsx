@@ -26,13 +26,11 @@ const globalStyles = css`
   }
 `;
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <>
-      <Global styles={globalStyles} />
-      <Component {...pageProps} />
-    </>
-  );
-}
+const MyApp = ({ Component, pageProps }: AppProps) => (
+  <>
+    <Global styles={globalStyles} />
+    <Component {...pageProps} />
+  </>
+);
 
 export default MyApp;

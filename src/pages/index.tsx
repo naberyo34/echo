@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import type { NextPage, InferGetServerSidePropsType } from 'next';
 import { getAuthUrl } from 'lib/utils';
 import axios from 'axios';
-import useAuth from 'lib/hooks/useAuth';
+import useAccessToken from 'lib/hooks/useAccessToken';
 import useSearchTracks from 'lib/hooks/useSearchTracks';
 
 export const getServerSideProps = async () => {
@@ -16,22 +15,21 @@ export const getServerSideProps = async () => {
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const Home: NextPage<Props> = ({ authPath }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const { data: authData, mutate: authMutate } = useAuth();
-  const { data: tracksData } = useSearchTracks(searchQuery);
+  const { data: tokenData, mutate: tokenMutate } = useAccessToken();
+  const { data: tracksData, setQuery } = useSearchTracks('');
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setSearchQuery(value);
+    setQuery(value);
   };
   const handleLogout = () => {
     axios.post('/api/auth/logout');
-    authMutate();
+    tokenMutate();
   };
 
   return (
     <div>
       <h1>echo (alpha)</h1>
-      {authData?.accessToken ? (
+      {tokenData ? (
         <>
           <p>logged in</p>
           <button type="button" onClick={handleLogout}>

@@ -1,26 +1,30 @@
+import { useState } from 'react';
 import useSWR from 'swr';
 import axios from 'axios';
-import { BFFTrackSearchResponse } from 'lib/types/bff';
+import { BFFSearchTracksResponse } from 'lib/types/bff';
+
+const endpoint = '/api/search/tracks';
+const fetcher = (url: string, query: string) =>
+  axios.post(url, { query }).then((res) => res.data);
+const config = {
+  shouldRetryOnError: false,
+};
 
 /**
  * 楽曲検索
- * @param query 検索クエリ
+ * @param init 検索クエリの初期値 (特に理由がなければ空文字でOK)
+ * @returns data, error: SWRの返却値 / setQuery: 検索クエリの更新メソッド
  */
-const useSearchTracks = (query: string) => {
-  const endpoint = '/api/search/tracks';
+const useSearchTracks = (init: string) => {
+  const [query, setQuery] = useState(init);
   const searchQuery = query ? [endpoint, query] : null;
-  const fetcher = (url: string, query: string) =>
-    axios.post(url, { query }).then((res) => res.data);
-  const config = {
-    shouldRetryOnError: false,
-  };
-  const { data, error } = useSWR<BFFTrackSearchResponse>(
+  const { data, error } = useSWR<BFFSearchTracksResponse>(
     searchQuery,
     fetcher,
     config,
   );
 
-  return { data, error };
+  return { data, error, setQuery };
 };
 
 export default useSearchTracks;
